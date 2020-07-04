@@ -13,14 +13,14 @@ object ShortCutFileUtil {
 
   private object ShortCutFileImpl {
 
-    initialize
+    initialize()
 
-    def initialize: Unit = {
+    def initialize(): Unit = {
       val result = Ole32.INSTANCE.CoInitializeEx(null, 0)
       if (W32Errors.FAILED(result)) throw new RuntimeException(s"CoInitializeEx failed $result")
     }
 
-    def uninitialize: Unit = Ole32.INSTANCE.CoUninitialize
+    def uninitialize(): Unit = Ole32.INSTANCE.CoUninitialize()
 
     private def createInstance(clsid: String, iid: String): PointerByReference = {
       val rclsid = Ole32Util.getGUIDFromString(clsid)
@@ -62,11 +62,11 @@ object ShortCutFileUtil {
       def queryInterface(riid: REFIID, obj: PointerByReference): Unit =
         invoke("QueryInterface", vTable(0), interfacePointer, riid, obj)
 
-      def addRef: Int = invokeNoCheck(vTable(1), interfacePointer)
+      def addRef(): Int = invokeNoCheck(vTable(1), interfacePointer)
 
-      def release: Int = invokeNoCheck(vTable(2), interfacePointer)
+      def release(): Int = invokeNoCheck(vTable(2), interfacePointer)
 
-      override def close: Unit = release
+      override def close(): Unit = release()
     }
 
     class IShellLink(pointerByReference: PointerByReference) extends IUnknown(pointerByReference, 21) {
